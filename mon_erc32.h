@@ -76,9 +76,7 @@ typedef enum {
 	PROM_BOOT        = 0xA5A5A5A5   /* 直接从PROM引导             */
 } BOOTMODE;
 
-#if __USE_EEPROM
 extern  BOOTMODE  boot_status;                    // cold, warm or hot
-#endif
 
 // 串口等待超时计数
 #define MAX_TIMEOUT 0x20000
