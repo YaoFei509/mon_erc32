@@ -135,55 +135,33 @@ int load_eeprom()
 			put_char('\n');
 			clear_watchdog();
 		}
-		
+
+		local_flag = 0;
 		for (j=0; j<128; j++) {
 			sa = ea[j];
 			sb = ea[j + EEPROM_ZONE_LEN*1024/4];
 			sc = ea[j + EEPROM_ZONE_LEN*2*1024/4]; // C
 			
-			switch (local_flag = check32(sa,sb,sc)) {
-			case 0:
-				p[j] = sa;
-				break;
-				
-			case 1:
-				p[j] = sb;
-				break;
-				
-			case 2:
-				p[j] = sa;
-				break;
-				
-			case 4:
-				p[j] = sa;
-				break;
-				
-			default:
-				p[j] = sa;
-				local_flag = -1;
-			}
+			local_flag |= check32(sa,sb,sc);
+			p[j] = (sa & sb) | (sb & sc) | ( sa & sc) ; // 按照比特三取二
 
 		} // for j
 
-		if (-1 == local_flag) {
-			flag32 = local_flag;
-			continue;
-		} else {
-			if (local_flag & 1) {
-				put_string("\n B->A \n");
-				write_sector(p, i);  // Write A
-			}
-			
-			if (local_flag & 2) {
-				put_string("\n A->B \n");
-				write_sector(p, i+EEPROM_ZONE_LEN*2);  // Write B
-			}
-			
-			if (local_flag & 4) {
-				put_string("\n A->C \n");
-				write_sector(p, i+EEPROM_ZONE_LEN*2*2); // Write C
-			} 
+		if (local_flag & 1) {
+			put_string("\n ->A \n");
+			write_sector(p, i);  // Write A
 		}
+		
+		if (local_flag & 2) {
+			put_string("\n ->B \n");
+			write_sector(p, i+EEPROM_ZONE_LEN*2);  // Write B
+		}
+		
+		if (local_flag & 4) {
+			put_string("\n ->C \n");
+			write_sector(p, i+EEPROM_ZONE_LEN*2*2); // Write C
+		} 
+
 	} // for each
 
 	p = (unsigned int *)PROM_PROG_START; 
