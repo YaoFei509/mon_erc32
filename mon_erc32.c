@@ -42,11 +42,12 @@ static void edac_correct_handler(int sig)
 
 	reg = (unsigned *)0x01f800a4;
 	addr = (*reg) & 0xffffffc;  // word address
- 
-		v = *(unsigned *)addr; 
-		*(unsigned *)addr = v;
-		reg = (int *)0x01f80050;
-		*reg = 0x40;   //注意回写过程会引发第二次中断，退出时清除伊
+
+	// FIXME
+	v = *(unsigned *)addr; 
+	*(unsigned *)addr = v;
+	reg = (int *)0x01f80050;
+	*reg = 0x40;   //注意回写过程会引发第二次中断，退出时清除伊
 	edac_flag++;
 }
 
