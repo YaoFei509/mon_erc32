@@ -94,7 +94,8 @@ void write_eeprom(unsigned last_address)
 */
 
 // 检查三取二
-int check32(unsigned int a, unsigned int b, unsigned int c, unsigned int *p)
+// Check three values A B C  to find any error, and then correct it bit by bit.
+__inline int check32(unsigned int a, unsigned int b, unsigned int c, unsigned int *p)
 {
 	int r = 0;
 
