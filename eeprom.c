@@ -94,23 +94,22 @@ void write_eeprom(unsigned last_address)
 */
 
 // 检查三取二
-int check32(unsigned int a, unsigned int b, unsigned int c)
+int check32(unsigned int a, unsigned int b, unsigned int c, unsigned int *p)
 {
 	int r = 0;
-	
-	if (a == b) {
-		if (b != c) {
-			r = 4;  // C error
-		}
-		// now a==b==c
-	} else if ( a == c) {
-		r = 2; // b error
-	} else if ( b == c) {
-		r = 1; // a error
-	} else {
-		r = -1;
-	}
-	
+
+	unsigned int t = (a & b) | (b & c) | ( a & c) ; // 按照比特三取二
+
+	if (t != a )
+		r = 1;  // A error
+
+	if (t != b ) 
+		r += 2; // B error
+
+	if (t != c )
+		r += 4; // C error 
+
+	*p = t;         // return the corrected value 
 	return r;
 }
 
@@ -138,13 +137,11 @@ int load_eeprom()
 
 		local_flag = 0;
 		for (j=0; j<128; j++) {
-			sa = ea[j];
-			sb = ea[j + EEPROM_ZONE_LEN*1024/4];
-			sc = ea[j + EEPROM_ZONE_LEN*2*1024/4]; // C
+			sa = ea[j];                            // ZONE A
+			sb = ea[j + EEPROM_ZONE_LEN*1024/4];   // ZONE B
+			sc = ea[j + EEPROM_ZONE_LEN*2*1024/4]; // ZONE C
 			
-			local_flag |= check32(sa,sb,sc);
-			p[j] = (sa & sb) | (sb & sc) | ( sa & sc) ; // 按照比特三取二
-
+			local_flag |= check32(sa,sb,sc, &p[j]);
 		} // for j
 
 		if (local_flag & 1) {
