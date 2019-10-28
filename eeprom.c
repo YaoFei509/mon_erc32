@@ -11,7 +11,7 @@ extern int volatile  edac_flag;
  */
 unsigned eeprom_temp[512];
 
-// 写一个"扇区" 128字
+// 写一个"扇区" 128字 Write a sector by 128 Words 
 // data   : input data ( max 128 words)
 // sector : SECTOR number in EEPROM . 128words per sector
 //
@@ -24,8 +24,6 @@ unsigned eeprom_temp[512];
 // 10MHz: 0x1000 
 // 16MHz: 0x1a00?
 #define MAX_EEPROM_WAIT  0x2000
-
-
 
 // 禁止读操作的EDAC检查
 void inline disable_edac()
@@ -50,11 +48,11 @@ int write_sector(unsigned *data, unsigned sec)
 	return 0;
 }
 
-void write_eeprom(unsigned last_address)
+int write_eeprom(unsigned last_address)
 {
 	/* FIXME */
 	/* Add your code here */
-	return;
+	return 0;
 }
 
 /*
