@@ -96,7 +96,7 @@ void print_u32(unsigned v);
 int write_sector(unsigned *data, unsigned sec);
 
 // 把加载到内存的代码写入EEPROM
-void write_eeprom(unsigned last_address);
+int write_eeprom(unsigned last_address);
 
 // 从EEPROM加载
 int load_eeprom();
