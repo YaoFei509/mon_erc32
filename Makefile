@@ -56,7 +56,7 @@ mon_erc32: $(OBJS)
 	$(CC) -o $@ $(CFLAGS) $(ERC32_MON_LDFLAGS) $(OBJS)
 	$(OBJCOPY) -O ihex $@ $@.hex
 
-run: $(TARGETS) hanoi
+run: $(TARGETS) 
 	@echo run "nc localhost 6950 < hanoi.hex" at another terminal window.
 	$(RUN) $(RUN_FLAG) $<
 
